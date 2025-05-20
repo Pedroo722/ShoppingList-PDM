@@ -1,6 +1,6 @@
 # Lista de Compras - React Native
 
-Um sistema de um um aplicativo voltado ao gerenciamento de lista de compras (supermercado) para uma casa. Desenvolvido em **Typescript** usando o framework **React Native** como parte da uma atividade para a disciplina de **Programação para Dispositivos Móveis**.
+Um sistema de um um aplicativo voltado ao gerenciamento de lista de compras (supermercado) para uma casa. Desenvolvido em **Typescript** usando o framework **React Native** como parte de uma atividade para a disciplina de **Programação para Dispositivos Móveis**.
 
 # Aplicação
 
@@ -51,3 +51,8 @@ Um sistema de um um aplicativo voltado ao gerenciamento de lista de compras (sup
      ```bash
      npx react-native run-android
      ```
+
+   - Para **iOS** (somente macOS):
+
+     ```bash
+     npx react-native run-ios

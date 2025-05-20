@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { View, Alert, StyleSheet, ScrollView } from 'react-native';
 import { Text, IconButton, Card, Button, TextInput, List, Divider, Dialog, Portal } from 'react-native-paper';
-
-const mockProducts = [
-  { name: 'Arroz', quantity: 10 },
-  { name: 'Café', quantity: 5 },
-  { name: 'Leite', quantity: 3 },
-];
+import { useProductContext } from '../context/ProductContext';
 
 const ShoppingList: React.FC = () => {
-  const [products, setProducts] = useState<Array<{ name: string; quantity: number }>>(mockProducts);
+  const { products } = useProductContext();
   const [shoppingQuantities, setShoppingQuantities] = useState<{ [key: string]: number }>({});
   const [visible, setVisible] = useState<boolean>(false);
   const [editProductName, setEditProductName] = useState<string>('');

@@ -1,84 +1,78 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Alert, StyleSheet, ScrollView } from 'react-native';
 import { Text, IconButton, Card, Checkbox, List, Divider, Button } from 'react-native-paper';
-
-const mockList = [
-    { name: 'Arroz', quantityToBuy: 2, bought: false },
-    { name: 'Café', quantityToBuy: 1, bought: false },
-    { name: 'Leite', quantityToBuy: 3, bought: false },
-]
+import { useProductContext } from '../context/ProductContext';
 
 const Purchase: React.FC = () => {
-    const [purchaseList, setPurchaseList] = useState<Array<{ name: string; quantityToBuy: number; bought: boolean }>>(mockList);
+    const { products, updateProductQuantity, removeProductFromPantry } = useProductContext();
 
     const handleToggleItem = (index: number) => {
-        const updatedList = [...purchaseList];
-        updatedList[index].bought = !updatedList[index].bought;
-        setPurchaseList(updatedList);
+        const updatedProducts = [...products];
+        updatedProducts[index].bought = !updatedProducts[index].bought;
+        updateProductQuantity(updatedProducts);
     };
 
     const handleRemoveItem = (index: number) => {
         Alert.alert(
-        'Remover Item',
-        'Tem certeza que deseja remover o item?',
-        [
-            { text: 'Cancelar' },
-            {
-            text: 'Remover',
-            onPress: () => {
-                const updatedList = purchaseList.filter((_, i) => i !== index);
-                setPurchaseList(updatedList);
-            },
-            },
-        ]
+            'Remover Item',
+            'Tem certeza que deseja remover o item?',
+            [
+                { text: 'Cancelar' },
+                {
+                    text: 'Remover',
+                    onPress: () => {
+                        removeProductFromPantry(index);
+                    },
+                },
+            ]
         );
     };
 
     const handleMarkAllAsBought = () => {
-        const updatedList = purchaseList.map(item => ({ ...item, bought: true }));
-        setPurchaseList(updatedList);
+        const updatedProducts = products.map(item => ({ ...item, bought: true }));
+        updateProductQuantity(updatedProducts);
     };
 
     return (
         <ScrollView style={styles.container}>
-        <Text variant="headlineLarge" style={styles.title}>
-            Compras
-        </Text>
+            <Text variant="headlineLarge" style={styles.title}>
+                Compras
+            </Text>
 
-        {purchaseList.map((item, index) => (
-            <Card key={index} style={styles.card}>
-            <Card.Content>
-                <List.Item
-                title={item.name}
-                description={`Quantidade para Comprar: ${item.quantityToBuy}`}
-                left={() => (
-                    <Checkbox
-                    status={item.bought ? 'checked' : 'unchecked'}
-                    onPress={() => handleToggleItem(index)}
-                    />
-                )}
-                right={() => (
-                    <IconButton
-                    icon="trash-can"
-                    size={20}
-                    onPress={() => handleRemoveItem(index)}
-                    />
-                )}
-                />
-            </Card.Content>
-            <Divider />
-            </Card>
-        ))}
+            {products.map((item, index) => (
+                <Card key={index} style={styles.card}>
+                    <Card.Content>
+                        <List.Item
+                            title={item.name}
+                            description={`Quantidade para Comprar: ${item.quantity}`}
+                            left={() => (
+                                <Checkbox
+                                    status={item.bought ? 'checked' : 'unchecked'}
+                                    onPress={() => handleToggleItem(index)}
+                                />
+                            )}
+                            right={() => (
+                                <IconButton
+                                    icon="trash-can"
+                                    size={20}
+                                    onPress={() => handleRemoveItem(index)}
+                                />
+                            )}
+                        />
+                    </Card.Content>
+                    <Divider />
+                </Card>
+            ))}
 
-        <Button
-            icon="check-all"
-            mode="contained"
-            onPress={handleMarkAllAsBought}
-            style={styles.addButton}
-            contentStyle={styles.buttonContent}
-        >
-            Marcar tudo como comprado
-        </Button>
+            <Button
+                icon="check-all"
+                mode="contained"
+                onPress={handleMarkAllAsBought}
+                style={styles.addButton}
+                contentStyle={styles.buttonContent}
+            >
+                Marcar tudo como comprado
+            </Button>
         </ScrollView>
     );
 };

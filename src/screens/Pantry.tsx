@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { View, Alert, StyleSheet, ScrollView } from 'react-native';
 import { Text, IconButton, Card, Button, TextInput, List, Divider, Dialog, Portal } from 'react-native-paper';
-
-const mockProducts = [
-  { name: 'Arroz', quantity: 10 },
-  { name: 'Café', quantity: 5 },
-  { name: 'Leite', quantity: 3 },
-];
+import { useProductContext } from '../context/ProductContext';
 
 const Pantry: React.FC = () => {
-  const [products, setProducts] = useState<Array<{ name: string; quantity: number }>>(mockProducts);
+  const { products, addProduct, updateProductQuantity, removeProductFromPantry } = useProductContext();
   const [newProductName, setNewProductName] = useState<string>('');
   const [newProductQuantity, setNewProductQuantity] = useState<number>(1);
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -23,9 +18,8 @@ const Pantry: React.FC = () => {
       return;
     }
 
-    const newProduct = { name: newProductName, quantity: newProductQuantity };
-
-    setProducts([...products, newProduct]);
+    const newProduct = { name: newProductName, quantity: newProductQuantity, bought: false };
+    addProduct(newProduct);
     setNewProductName('');
     setNewProductQuantity(1);
   };
@@ -44,8 +38,9 @@ const Pantry: React.FC = () => {
       updatedProducts[editIndex] = {
         name: editProductName,
         quantity: editProductQuantity,
+        bought: updatedProducts[editIndex].bought,
       };
-      setProducts(updatedProducts);
+      updateProductQuantity(updatedProducts);
       setVisible(false);
       setEditIndex(null);
     }
@@ -54,7 +49,7 @@ const Pantry: React.FC = () => {
   const handleUpdateQuantity = (index: number, newQuantity: number) => {
     const updatedProducts = [...products];
     updatedProducts[index].quantity = newQuantity;
-    setProducts(updatedProducts);
+    updateProductQuantity(updatedProducts);
   };
 
   const handleRemoveProduct = (index: number) => {
@@ -66,8 +61,7 @@ const Pantry: React.FC = () => {
         {
           text: 'Remover',
           onPress: () => {
-            const updatedProducts = products.filter((_, i) => i !== index);
-            setProducts(updatedProducts);
+            removeProductFromPantry(index);
           },
         },
       ]
@@ -104,44 +98,44 @@ const Pantry: React.FC = () => {
       </Button>
 
       <View style={styles.cardsContainer}>
-      {products.map((product, index) => (
-        <Card key={index} style={styles.card}>
-          <Card.Content>
-            <List.Item
-              title={product.name}
-              description={`Quantidade: ${product.quantity}`}
-              left={() => (
-                <Button
-                  mode="outlined"
-                  onPress={() => handleUpdateQuantity(index, product.quantity + 1)}
-                >
-                  +
-                </Button>
-              )}
-              right={() => (
-                <Button
-                  mode="outlined"
-                  onPress={() => handleUpdateQuantity(index, product.quantity - 1)}
-                  disabled={product.quantity === 0}
-                >
-                  -
-                </Button>
-              )}
-            />
-            <IconButton
-              icon="pencil"
-              size={20}
-              onPress={() => handleEditProduct(index)}
-            />
-            <IconButton
-              icon="trash-can"
-              size={20}
-              onPress={() => handleRemoveProduct(index)}
-            />
-          </Card.Content>
-          <Divider />
-        </Card>
-      ))}
+        {products.map((product, index) => (
+          <Card key={index} style={styles.card}>
+            <Card.Content>
+              <List.Item
+                title={product.name}
+                description={`Quantidade: ${product.quantity}`}
+                left={() => (
+                  <Button
+                    mode="outlined"
+                    onPress={() => handleUpdateQuantity(index, product.quantity + 1)}
+                  >
+                    +
+                  </Button>
+                )}
+                right={() => (
+                  <Button
+                    mode="outlined"
+                    onPress={() => handleUpdateQuantity(index, product.quantity - 1)}
+                    disabled={product.quantity === 0}
+                  >
+                    -
+                  </Button>
+                )}
+              />
+              <IconButton
+                icon="pencil"
+                size={20}
+                onPress={() => handleEditProduct(index)}
+              />
+              <IconButton
+                icon="trash-can"
+                size={20}
+                onPress={() => handleRemoveProduct(index)}
+              />
+            </Card.Content>
+            <Divider />
+          </Card>
+        ))}
       </View>
 
       <Portal>
