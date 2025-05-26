@@ -2,6 +2,11 @@
 
 Um sistema de um um aplicativo voltado ao gerenciamento de lista de compras (supermercado) para uma casa. Desenvolvido em **Typescript** usando o framework **React Native** como parte de uma atividade para a disciplina de **Programação para Dispositivos Móveis**.
 
+Membros:
+- Pedro Henrique Alexandre
+- Thiago dos Santos Araujo
+- Vinicius Cavalcante Pequeno
+
 # Aplicação
 
 <div align="center">
